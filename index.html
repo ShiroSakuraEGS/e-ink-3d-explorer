@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E Ink 3D Explorer — 電子紙技術立體解說平台</title>
+  <meta name="description" content="以 CSS 3D 立體視覺化方式，完整解說元太科技 E Ink 電子紙的微膠囊結構、四大彩色架構、技術演進時光軸與系統拓撲。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 掃描線視覺特效 -->
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- HUD 頂部導覽 -->
+  <header class="hud-header" role="banner">
+    <div class="hud-logo">
+      <div class="logo-eink-badge" aria-label="E Ink 品牌標誌">
+        <span class="logo-bracket">[</span>
+        <span class="logo-text">E INK 3D EXPLORER</span>
+        <span class="logo-bracket">]</span>
+      </div>
+      <span class="logo-sub">元太科技技術立體解說平台 v1.0</span>
+    </div>
+    <nav class="hud-nav" role="navigation" aria-label="主導覽">
+      <div class="nav-item active" id="nav-capsule" data-screen="capsule">
+        <span class="nav-icon">⬡</span> 微膠囊解剖
+      </div>
+      <div class="nav-item" id="nav-color" data-screen="color">
+        <span class="nav-icon">◈</span> 彩色架構
+      </div>
+      <div class="nav-item" id="nav-timeline" data-screen="timeline">
+        <span class="nav-icon">◉</span> 技術演進
+      </div>
+      <div class="nav-item" id="nav-system" data-screen="system">
+        <span class="nav-icon">▣</span> 系統拓撲
+      </div>
+      <div class="nav-item" id="nav-power" data-screen="power">
+        <span class="nav-icon">⚡</span> 電源計算
+      </div>
+    </nav>
+    <div class="hud-status">
+      <div class="status-item">
+        <span class="status-label">技術層數</span>
+        <span class="status-value neon-cyan" id="layer-count">6</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">彩色架構</span>
+        <span class="status-value neon-yellow">4 種</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">里程碑</span>
+        <span class="status-value neon-green">14 個</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容 -->
+  <main class="main-content" role="main">
+
+    <!-- ========== 畫面 A：微膠囊 3D 解剖 ========== -->
+    <section id="screen-capsule" class="screen active" aria-label="微膠囊 3D 解剖">
+      <!-- 左側：技術層列表 -->
+      <aside class="panel panel-left" aria-label="技術層選擇">
+        <div class="panel-header">
+          <span class="panel-title">// E Ink 技術層結構</span>
+          <span class="panel-badge blink">6 層</span>
+        </div>
+        <div class="layer-list" id="layer-list" role="list">
+          <!-- 由 JS 動態填入 -->
+        </div>
+        <div class="panel-footer">
+          <div class="footer-label">互動提示 →</div>
+          <button class="btn-cyber" id="btn-explode" aria-label="觸發爆炸分解動畫">
+            <span>分層展開</span>
+          </button>
+          <button class="btn-cyber btn-secondary" id="btn-reset-capsule" aria-label="重置為組裝狀態">
+            <span>重置組合</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- 中央：3D 微膠囊視窗 -->
+      <div class="panel panel-center" id="capsule-view-panel" aria-label="3D 微膠囊視圖">
+        <div class="panel-header">
+          <span class="panel-title" id="capsule-view-title">// E Ink 微膠囊 — 電泳式電子墨水截面</span>
+          <div class="view-controls" role="toolbar">
+            <button class="view-btn active" id="btn-view-assembled" title="組裝狀態" aria-pressed="true">■</button>
+            <button class="view-btn" id="btn-view-explode" title="分層展開" aria-pressed="false">⬡</button>
+            <button class="view-btn" id="btn-view-xray" title="X 光模式" aria-pressed="false">◈</button>
+          </div>
+        </div>
+        <div class="device-viewport" id="capsule-viewport" role="img" aria-label="微膠囊 3D 視圖">
+          <!-- 3D 場景 -->
+          <div class="device-scene" id="capsule-scene">
+            <div class="scene-floor" aria-hidden="true"></div>
+            <div class="device-3d-wrapper" id="capsule-3d-wrapper">
+              <!-- 由 JS 動態建立各個 3D 層 -->
+            </div>
+            <!-- 操作提示 -->
+            <div class="wasd-hint" aria-hidden="true">
+              <span class="key-badge">W</span><span class="key-badge">A</span><span class="key-badge">S</span><span class="key-badge">D</span>
+              <span>旋轉</span>
+              <span class="hint-sep">·</span>
+              <span class="key-badge">Q</span><span class="key-badge">E</span>
+              <span>縮放</span>
+              <span class="hint-sep">·</span>
+              <span class="key-badge">R</span>
+              <span>重置</span>
+              <span class="hint-sep">·</span>
+              <span>拖曳旋轉</span>
+            </div>
+          </div>
+          <!-- 粒子動畫覆蓋層 -->
+          <div class="particle-overlay" id="particle-overlay" hidden aria-hidden="true">
+            <canvas id="particle-canvas"></canvas>
+            <div class="field-label field-pos">+ 正電場 (白色粒子上浮)</div>
+            <div class="field-label field-neg">− 負電場 (黑色粒子上浮)</div>
+          </div>
+        </div>
+        <!-- 電場控制列 -->
+        <div class="field-control-bar" id="field-control-bar">
+          <span class="field-label-text">電場控制：</span>
+          <button class="field-btn" id="btn-field-pos" aria-label="正電場 — 白色粒子移至表面">＋ 正電場（白）</button>
+          <button class="field-btn" id="btn-field-neg" aria-label="負電場 — 黑色粒子移至表面">－ 負電場（黑）</button>
+          <button class="field-btn" id="btn-field-gray" aria-label="混合灰階">◑ 灰階混合</button>
+          <button class="field-btn btn-field-off" id="btn-field-bistable" aria-label="雙穩態鎖定">⊙ 雙穩態鎖定</button>
+          <button class="field-btn" id="btn-particle-anim" aria-label="切換粒子動畫模式">⟳ 粒子動畫</button>
+        </div>
+      </div>
+
+      <!-- 右側：技術說明 -->
+      <aside class="panel panel-right" aria-label="技術說明">
+        <div class="panel-header">
+          <span class="panel-title">// 層級技術說明</span>
+        </div>
+        <div class="layer-detail" id="layer-detail">
+          <div class="no-selection-msg">← 點擊左側技術層<br/>查看詳細說明</div>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-header">
+          <span class="panel-title">// 技術名詞字典</span>
+        </div>
+        <div class="glossary-search-area">
+          <input class="glossary-search" id="glossary-search" type="search" placeholder="搜尋名詞..." aria-label="搜尋技術名詞" />
+        </div>
+        <div class="glossary-list" id="glossary-list" role="list">
+          <!-- 由 JS 填入 -->
+        </div>
+      </aside>
+    </section>
+
+    <!-- ========== 畫面 B：彩色架構 3D 對比 ========== -->
+    <section id="screen-color" class="screen" aria-label="四大彩色架構" hidden>
+      <div class="color-studio">
+        <div class="kb-header">
+          <h1 class="kb-title">// 四大彩色電子紙架構 — 3D 剖面對比</h1>
+          <p class="kb-subtitle">Carta 1200 · Kaleido 3 · Gallery 3 (ACeP) · Spectra 6</p>
+        </div>
+        <div class="color-arch-grid" id="color-arch-grid" role="list">
+          <!-- 由 JS 動態填入四個 3D 架構卡片 -->
+        </div>
+        <!-- 詳細說明展開區 -->
+        <div class="color-detail-panel" id="color-detail-panel" hidden>
+          <div class="color-detail-header">
+            <span class="color-detail-title" id="color-detail-title"></span>
+            <button class="modal-close" id="color-detail-close" aria-label="關閉詳情">✕</button>
+          </div>
+          <div class="color-detail-body" id="color-detail-body"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 畫面 C：技術演進時光軸 ========== -->
+    <section id="screen-timeline" class="screen" aria-label="技術演進時光軸" hidden>
+      <div class="timeline-screen">
+        <div class="kb-header">
+          <h1 class="kb-title">// 元太科技技術演進時光軸 1990 — 2026</h1>
+          <p class="kb-subtitle">從 MIT 實驗室到智慧零售市場爆發</p>
+        </div>
+        <div class="timeline-filter" role="group" aria-label="時光軸篩選">
+          <button class="filter-btn active" data-filter="all" id="filter-all">全部</button>
+          <button class="filter-btn" data-filter="bw" id="filter-bw">⬜ 黑白技術</button>
+          <button class="filter-btn" data-filter="color" id="filter-color">🎨 彩色技術</button>
+          <button class="filter-btn" data-filter="key" id="filter-key">⭐ 關鍵里程碑</button>
+        </div>
+        <div class="timeline-track" id="timeline-track" role="list">
+          <!-- 由 JS 動態填入 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 畫面 D：系統拓撲 3D ========== -->
+    <section id="screen-system" class="screen" aria-label="系統拓撲" hidden>
+      <div class="system-screen">
+        <div class="kb-header">
+          <h1 class="kb-title">// 電子紙系統元件拓撲 — 3D 立體圖</h1>
+          <p class="kb-subtitle">本地運算 vs. 雲端外移架構對比</p>
+        </div>
+        <div class="system-toggle-bar" role="group" aria-label="架構模式切換">
+          <button class="sys-btn active" id="btn-local" data-arch="local">本地運算架構</button>
+          <button class="sys-btn" id="btn-cloud" data-arch="cloud">雲端外移架構</button>
+        </div>
+        <div class="system-3d-container" id="system-3d-container">
+          <!-- 由 JS 動態繪製系統拓撲 3D 方塊 -->
+        </div>
+        <div class="system-legend" id="system-legend"></div>
+      </div>
+    </section>
+
+    <!-- ========== 畫面 E：電源計算機 ========== -->
+    <section id="screen-power" class="screen" aria-label="電源計算機" hidden>
+      <div class="power-screen">
+        <div class="kb-header">
+          <h1 class="kb-title">// BLE vs. Wi-Fi 智慧電源計算機</h1>
+          <p class="kb-subtitle">量化電子紙低功耗優勢的科學根據</p>
+        </div>
+        <div class="power-layout">
+          <!-- 左側：控制面板 -->
+          <div class="power-controls" id="power-controls">
+            <div class="power-section-title">通訊模組</div>
+            <div class="power-toggle-group" role="group" aria-label="通訊模組選擇">
+              <button class="power-toggle active" id="pt-ble" data-comm="ble">BLE 5.0</button>
+              <button class="power-toggle" id="pt-wifi" data-comm="wifi">Wi-Fi</button>
+            </div>
+
+            <div class="power-section-title">更新頻率</div>
+            <div class="power-param-row">
+              <label for="param-updates">每日更新次數</label>
+              <input type="range" id="param-updates" min="1" max="200" value="24" />
+              <span class="param-val" id="val-updates">24</span>
+            </div>
+
+            <div class="power-section-title">螢幕尺寸</div>
+            <div class="power-toggle-group" role="group" aria-label="螢幕尺寸選擇">
+              <button class="power-toggle active" id="ps-small" data-size="small">2.9"</button>
+              <button class="power-toggle" id="ps-medium" data-size="medium">7.5"</button>
+              <button class="power-toggle" id="ps-large" data-size="large">13.3"</button>
+            </div>
+
+            <div class="power-section-title">電池容量</div>
+            <div class="power-param-row">
+              <label for="param-battery">電池容量 (mAh)</label>
+              <input type="range" id="param-battery" min="100" max="5000" value="500" step="100" />
+              <span class="param-val" id="val-battery">500</span>
+            </div>
+
+            <div class="power-section-title">情境預設</div>
+            <div class="power-preset-list">
+              <button class="preset-btn" id="preset-esl" data-preset="esl">ESL 電子貨架標籤</button>
+              <button class="preset-btn" id="preset-reader" data-preset="reader">電子書閱讀器</button>
+              <button class="preset-btn" id="preset-signage" data-preset="signage">數位看板</button>
+            </div>
+          </div>
+
+          <!-- 中央：視覺化結果 -->
+          <div class="power-result" id="power-result">
+            <div class="power-result-main">
+              <div class="result-card" id="result-card-life">
+                <div class="result-label">預估電池壽命</div>
+                <div class="result-value" id="result-life">-- 天</div>
+                <div class="result-sub" id="result-life-sub"></div>
+              </div>
+              <div class="result-card" id="result-card-daily">
+                <div class="result-label">每日耗電量</div>
+                <div class="result-value" id="result-daily">-- mAh</div>
+              </div>
+            </div>
+            <!-- 功耗分解長條圖 -->
+            <div class="power-breakdown">
+              <div class="breakdown-title">// 功耗組成分解</div>
+              <div class="breakdown-bars" id="breakdown-bars"></div>
+            </div>
+            <!-- BLE vs Wi-Fi 峰值比較 -->
+            <div class="comm-compare">
+              <div class="breakdown-title">// 通訊模組功耗規格對比</div>
+              <table class="compare-table" id="comm-compare-table">
+                <thead>
+                  <tr>
+                    <th>規格</th>
+                    <th class="col-ble">BLE 5.0</th>
+                    <th class="col-wifi">Wi-Fi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>峰值電流</td><td class="col-ble">~15 mA</td><td class="col-wifi">50–100 mA</td></tr>
+                  <tr><td>待機電流</td><td class="col-ble">&lt;1 µA</td><td class="col-wifi">1–5 mA</td></tr>
+                  <tr><td>傳輸距離</td><td class="col-ble">~10 m</td><td class="col-wifi">~50 m+</td></tr>
+                  <tr><td>頻寬</td><td class="col-ble">~2 Mbps</td><td class="col-wifi">~100+ Mbps</td></tr>
+                  <tr><td>適合場景</td><td class="col-ble">ESL / 感測器</td><td class="col-wifi">大型看板</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 技術層詳情 Modal -->
+  <div class="modal-overlay" id="layer-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="layer-modal-title">
+    <div class="modal-box" id="layer-modal-box">
+      <div class="modal-header">
+        <span class="modal-title" id="layer-modal-title">層級詳情</span>
+        <button class="modal-close" id="layer-modal-close" aria-label="關閉視窗">✕</button>
+      </div>
+      <div class="modal-body" id="layer-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- 技術名詞 Modal -->
+  <div class="modal-overlay" id="glossary-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="glossary-modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title" id="glossary-modal-title"></span>
+        <button class="modal-close" id="glossary-modal-close" aria-label="關閉視窗">✕</button>
+      </div>
+      <div class="modal-body" id="glossary-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
